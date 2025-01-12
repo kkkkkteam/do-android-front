@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'boards_case_screen.dart'; // 수정된 BoardsCaseScreen으로의 경로
-import '../../widgets/custom_app_bar.dart'; // HomeScreen에서 사용한 CustomAppBar 재사용
+import 'boards_case_screen.dart'; // BoardsCaseScreen import
+import '../../widgets/custom_app_bar.dart'; // CustomAppBar import
+import '../../widgets/custom_post.dart'; // PostCard import
 
 class BoardScreen extends StatelessWidget {
   const BoardScreen({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class BoardScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    //사내 게시판 클릭시
+                    // 사내 게시판 클릭시
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40.0),
@@ -53,7 +54,7 @@ class BoardScreen extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    //익명 게시판 클릭 시
+                    // 익명 게시판 클릭 시
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40.0),
@@ -86,7 +87,7 @@ class BoardScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: boardList
-                    .map((board) => _buildBoardItem(context, board))
+                    .map((board) => BoardItem(title: board)) // BoardItem 위젯 사용
                     .toList(),
               ),
             ),
@@ -102,15 +103,32 @@ class BoardScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            _buildSamplePostCard(),
+            InkWell(
+              onTap: () {
+                // 게시물 클릭 시 동작
+              },
+              child: PostCard(
+                title: '긴급상황: 이것은 제목입니다',
+                content: '안녕하세요, 이것은 내용입니다. 감자튀김이 있어요...', // 수정된 매개변수 이름
+                author: '익명',
+                date: '2025.01.22',
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  // 게시판 항목 생성
-  Widget _buildBoardItem(BuildContext context, String title) {
+// 게시판 항목 위젯
+class BoardItem extends StatelessWidget {
+  final String title;
+
+  const BoardItem({required this.title, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -119,7 +137,7 @@ class BoardScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BoardsCaseScreen(title: title), // 수정된 BoardsCaseScreen으로 변경
+                builder: (context) => BoardsCaseScreen(title: title),
               ),
             );
           },
@@ -135,59 +153,6 @@ class BoardScreen extends StatelessWidget {
         ),
         const Divider(color: Color(0xFFF3F3F3)),
       ],
-    );
-  }
-
-  // 샘플 게시물 카드
-  Widget _buildSamplePostCard() {
-    return Container(
-      padding: const EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3F3F3),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
-            '긴급상황: 이것은 제목입니다',
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: 'Dohyeon',
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            '안녕하세요, 이것은 내용입니다...',
-            style: TextStyle(
-              fontSize: 10,
-              fontFamily: 'NanumGothic',
-            ),
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                '익명',
-                style: TextStyle(
-                  fontSize: 7,
-                  fontFamily: 'NanumGothic',
-                ),
-              ),
-              SizedBox(width: 8),
-              Text(
-                '2025.01.22',
-                style: TextStyle(
-                  fontSize: 7,
-                  fontFamily: 'NanumGothic',
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

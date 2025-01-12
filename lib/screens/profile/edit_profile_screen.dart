@@ -28,21 +28,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     ],
   };
 
-  void _showSnackBar(BuildContext context) {
-    final snackBar = SnackBar(
-      content: const Text(
-        '프로필 사진이 변경되었습니다!',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      duration: const Duration(seconds: 3),
-      backgroundColor: Colors.green,
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
   @override
   Widget build(BuildContext context) {
     final imageList = genderImageMap[selectedGender]!;
@@ -103,11 +88,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   });
                 },
                 borderRadius: BorderRadius.circular(30),
-                borderColor: Colors.green,
-                selectedBorderColor: Colors.green,
-                fillColor: Colors.green,
+                borderColor: Color(0xFF2E9629),
+                selectedBorderColor: Color(0xFF2E9629),
+                fillColor: Color(0xFF2E9629),
                 selectedColor: Colors.white,
-                color: Colors.green,
+                color: Color(0xFF2E9629),
                 constraints: const BoxConstraints(
                   minWidth: 100,
                   minHeight: 40,
@@ -173,9 +158,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 padding: const EdgeInsets.only(bottom: 30),
                 child: CustomButton(
                   text: '변경',
-                  color: Colors.green,
+                  color: Color(0xFF2E9629),
                   onPressed: () {
-                    _showSnackBar(context); // SnackBar 표시
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('프로필 사진이 변경되었습니다!')),
+                    ); // SnackBar 표시
                   },
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../widgets/board_upload_app_bar.dart'; // BoardUploadAppBar 사용
+import '../../widgets/custom_board_app_bar.dart';
+import '../../widgets/custom_textField.dart';
 
 class PostCreationPage extends StatefulWidget {
   @override
@@ -27,14 +28,14 @@ class _PostCreationPageState extends State<PostCreationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: BoardUploadAppBar(title: '게시물 작성'), // BoardUploadAppBar 사용
+      appBar: CustomBoardAppBar(title: '게시물 작성'), // BoardUploadAppBar 사용
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // DropdownButton
-            
+            SizedBox(height: 30,),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
@@ -68,48 +69,26 @@ class _PostCreationPageState extends State<PostCreationPage> {
             ),
             SizedBox(height: 12),
             // 제목 입력 필드
-            TextField(
-              decoration: InputDecoration(
-                hintText: '제목',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFAAAAAA), width: 1), // 연한 검은색 테두리
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFAAAAAA), width: 1), // 비활성 테두리
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFAAAAAA), width: 1), // 활성화 테두리
-                ),
-              ),
+            CustomTextField(
+              hintText: '제목',
+              borderColor: Color(0xFFAAAAAA), // 테두리 색상 변경
+              maxLines: 1,
             ),
             SizedBox(height: 12),
             // 내용 입력 필드
-            TextField(
-              maxLines: 8,
-              decoration: InputDecoration(
-                hintText: '내용을 입력하세요',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFAAAAAA), width: 1), // 연한 검은색 테두리
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFAAAAAA), width: 1), // 비활성 테두리
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFAAAAAA), width: 1), // 활성화 테두리
-                ),
-              ),
+            CustomTextField(
+              hintText: '내용을 입력하세요',
+              borderColor: Color(0xFFAAAAAA), // 테두리 색상 변경
+              maxLines: 10,
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 60),
             // 업로드 버튼
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('업로드가 완료되었습니다!')),
+                  );
                   // 게시물 작성 후 게시판 화면으로 돌아가기
                   Navigator.pop(context);
                 },

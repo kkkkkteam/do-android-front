@@ -29,61 +29,65 @@ class CustomSection extends StatelessWidget {
             color: const Color(0xFF2E9528),
           ),
           const SizedBox(height: 12),
-          // 섹션 아이템 리스트
-          ...items.map((item) => _buildItem(item)).toList(),
+          // 아이템 리스트
+          ListView.builder(
+            shrinkWrap: true, // 부모 위젯의 크기를 초과하지 않도록 설정
+            physics: const NeverScrollableScrollPhysics(), // 스크롤 비활성화 (외부 스크롤 사용)
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
+              return Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // 제목
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          item['title'],
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontFamily: 'NanumGothic',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      // 값 및 아이콘
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              item['value'],
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontFamily: 'NanumGothic',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            if (item.containsKey('icon')) // 아이콘이 있는 경우만 표시
+                              IconButton(
+                                onPressed: item['onPressed'],
+                                icon: item['icon'],
+                                iconSize: 18,
+                                color: Colors.grey,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(color: Color(0xFFD9D9D9), thickness: 1),
+                ],
+              );
+            },
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildItem(Map<String, dynamic> item) {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // 제목
-            Expanded(
-              flex: 2,
-              child: Text(
-                item['title'],
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 12,
-                  fontFamily: 'NanumGothic',
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-            // 값 및 아이콘
-            Expanded(
-              flex: 3,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    item['value'],
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontFamily: 'NanumGothic',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  if (item.containsKey('icon')) // 아이콘이 있는 경우만 표시
-                    IconButton(
-                      onPressed: item['onPressed'],
-                      icon: item['icon'],
-                      iconSize: 18,
-                      color: Colors.grey,
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const Divider(color: Color(0xFFD9D9D9), thickness: 1),
-      ],
     );
   }
 }
