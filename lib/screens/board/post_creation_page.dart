@@ -23,6 +23,7 @@ class _PostCreationPageState extends State<PostCreationPage> {
     'CX팀 게시판',
   ];
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
