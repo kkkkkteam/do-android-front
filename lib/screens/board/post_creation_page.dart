@@ -34,7 +34,7 @@ class _PostCreationPageState extends State<PostCreationPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // DropdownButton
-            
+
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
