@@ -119,13 +119,19 @@ class ProfileScreen extends StatelessWidget {
                             'title': '경험치 내역 확인',
                             'value': '보기',
                             'icon': const Icon(Icons.chevron_right),
-                            'onPressed': () {},
+                            'onPressed': () {
+                              // 특정 동작
+                              print('경험치 내역 확인');
+                            },
                           },
                           {
                             'title': '연도별 경험치',
                             'value': '보기',
                             'icon': const Icon(Icons.chevron_right),
-                            'onPressed': () {},
+                            'onPressed': () {
+                              // 특정 동작
+                              print('연도별 경험치 보기');
+                            },
                           },
                         ],
                       ),
