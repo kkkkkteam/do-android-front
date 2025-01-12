@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'screens/home/home_screen.dart';
+import 'screens/notification/notification_screen.dart';
+import 'screens/calendar/calendar_screen.dart';
+import 'screens/profile/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,139 +14,82 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            '비밀번호 변경',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: 'NanumGothic',
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          centerTitle: true, // 제목 중앙 배치
-          leading: IconButton(
-            color: Colors.black,
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {},
-          ),
-          backgroundColor: Colors.white, // 앱바 배경색
-          elevation: 0, // 그림자 제거
-        ),
-        body: Column(
-          children: [
-            // AppBar 아래 회색 경계선
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Color(0xFFD9D9D9), // 회색 경계선 색상
-                    width: 1.5, // 경계선 두께
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 30), // 경계선과 내용 간격
-            SizedBox(
-              width: 350,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯 왼쪽 정렬
-                children: [
-                  Text(
-                    '비밀번호 입력',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Jua',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                    width: double.infinity,
-                    height: 4,
-                    color: Color(0xFF2E9528),
-                  ),
-                  SizedBox(height: 11,),
-                  Text(
-                    '기존 비밀번호 입력 후 새 비밀번호를 입력하세요.',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontFamily: 'NanumGothic',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: 50,),
-                  passwordInputField('현재 비밀번호'),
-                  passwordInputField('새 비밀번호'),
-                  passwordInputField('새 비밀번호 확인'),
-                  SizedBox(height: 30,),
-                  ElevatedButton(
-                    onPressed: () {
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF2E9629), // 초록색 배경
-                      minimumSize: Size(350, 50), // 버튼의 최소 크기 (너비, 높이)
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15), // 둥근 모서리
-                      ),
-                    ),
-                    child: Text(
-                      '변경', // 버튼 텍스트
-                      style: TextStyle(
-                        color: Colors.white, // 텍스트 색상
-                        fontSize: 18, // 텍스트 크기
-                        fontWeight: FontWeight.w600, // 텍스트 두께
-                        fontFamily: 'NanumGothic', // 글꼴
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+      debugShowCheckedModeBanner: false,
+      title: 'Navigation App',
+      theme: ThemeData(
+        primaryColor: const Color(0xFF2E9528),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.white, // 네비게이션 바 배경 흰색
+          selectedItemColor: Color(0xFF2E9528), // 선택된 아이콘 색상
+          unselectedItemColor: Colors.grey, // 선택되지 않은 아이콘 색상
+          selectedIconTheme: IconThemeData(size: 28), // 아이콘 크기 고정
+          unselectedIconTheme: IconThemeData(size: 28), // 아이콘 크기 고정
         ),
       ),
+      home: const NavigationHome(),
     );
   }
 }
 
-Widget passwordInputField(String labelText) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        labelText,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 14,
-          fontFamily: 'NanumGothic',
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      SizedBox(height: 8),
-      Container(
-        padding: EdgeInsets.symmetric(horizontal: 16), // 양옆 여백
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12), // 둥근 모서리
-          color: Color(0xFFD9D9D9), // 배경색
-        ),
-        child: TextField(
-          decoration: InputDecoration(
-            border: InputBorder.none, // 기본 입력 필드 테두리 제거
+class NavigationHome extends StatefulWidget {
+  const NavigationHome({Key? key}) : super(key: key);
+
+  @override
+  State<NavigationHome> createState() => _NavigationHomeState();
+}
+
+class _NavigationHomeState extends State<NavigationHome> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const NotificationScreen(),
+    const CalendarScreen(),
+    const ProfileScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _screens[_currentIndex],
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min, // 네비게이션 바 높이에 영향을 미치지 않음
+        children: [
+          Container(
+            height: 1.5, // 회색 구분선 높이
+            color: const Color(0xFFD9D9D9), // 회색 절취선 색상
           ),
-          obscureText: true, // 비밀번호 입력 시 텍스트 숨기기
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: 'NanumGothic',
+          BottomNavigationBar(
+            type: BottomNavigationBarType.fixed, // 아이콘 및 위치 고정
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            showSelectedLabels: false, // 선택된 라벨 숨김
+            showUnselectedLabels: false, // 선택되지 않은 라벨 숨김
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: '', // 빈 라벨
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: '', // 빈 라벨
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_today),
+                label: '', // 빈 라벨
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: '', // 빈 라벨
+              ),
+            ],
           ),
-        ),
+        ],
       ),
-      SizedBox(height: 40)
-    ],
-  );
+    );
+  }
 }
