@@ -5,9 +5,9 @@ import '../../widgets/auth_profile_image_editor.dart';
 import '../../widgets/auth_info_row.dart';
 
 class AuthProfileScreen extends StatefulWidget {
-  final Auth auth; // Auth 객체를 받을 수 있도록 필드 추가
+  final Auth auth;
 
-  const AuthProfileScreen({required this.auth, Key? key}) : super(key: key); // 생성자 추가
+  const AuthProfileScreen({required this.auth, Key? key}) : super(key: key);
 
   @override
   _AuthProfileScreenState createState() => _AuthProfileScreenState();
@@ -19,7 +19,7 @@ class _AuthProfileScreenState extends State<AuthProfileScreen> {
   @override
   void initState() {
     super.initState();
-    auth = widget.auth; // 전달받은 Auth 객체 저장
+    auth = widget.auth;
   }
 
   void _updateAuth(Auth updatedAuth) {
@@ -34,9 +34,56 @@ class _AuthProfileScreenState extends State<AuthProfileScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('do.'),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            'do.',
+            style: TextStyle(
+              fontFamily: 'RubikScribble',
+              fontSize: 30,
+              color: Color(0xFF2E9629),
+            ),
+          ),
           centerTitle: true,
+          actions: [
+            GestureDetector(
+              onTap: () async {
+                final updatedAuth = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AuthEditProfileScreen(auth: auth),
+                  ),
+                );
+                if (updatedAuth != null) {
+                  _updateAuth(updatedAuth);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Center(
+                  child: Text(
+                    '사원 정보 수정',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'NanumGothic',
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
           bottom: TabBar(
+            indicatorColor: Colors.green,
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
             tabs: [
               Tab(text: '정보'),
               Tab(text: '달력'),
@@ -59,36 +106,105 @@ class _AuthProfileScreenState extends State<AuthProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AuthProfileImageEditor(),
-          SizedBox(height: 20),
-          Text('사원이름', style: TextStyle(fontSize: 14, fontFamily: 'Jua')),
-          Text(auth.name, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          Divider(),
-          AuthInfoRow(title: '아이디', value: auth.id),
-          AuthInfoRow(title: '소속', value: auth.department),
-          AuthInfoRow(title: '입사일', value: auth.joinDate),
-          AuthInfoRow(title: '직무그룹', value: auth.jobGroup),
-          Divider(),
-          Text('경험치', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          AuthInfoRow(title: '총 경험치', value: '${auth.totalExperience}'),
-          ...auth.yearlyExperience.entries.map((entry) {
-            return AuthInfoRow(title: entry.key, value: '${entry.value}');
-          }),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () async {
-              final updatedAuth = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AuthEditProfileScreen(auth: auth)),
-              );
-              if (updatedAuth != null) {
-                _updateAuth(updatedAuth);
-              }
-            },
-            child: Text('사원 정보 수정'),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '사원이름',
+                      style: TextStyle(fontSize: 14, fontFamily: 'NanumGothic'),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      auth.name,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: 80,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: AssetImage('assets/profile_image.jpeg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ],
           ),
+          SizedBox(height: 20),
+          Text(
+            "정보",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          Divider(color: Colors.green, thickness: 2),
+          _buildInfoRow("아이디", auth.id),
+          _buildInfoRow("소속", auth.department),
+          _buildInfoRow("입사일", auth.joinDate),
+          _buildInfoRow("직무그룹", auth.jobGroup),
+          SizedBox(height: 20),
+          Text(
+            "경험치",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          Divider(color: Colors.green, thickness: 2),
+          _buildInfoRow("총 경험치", "${auth.totalExperience}"),
+          ...auth.yearlyExperience.entries.map((entry) {
+            return _buildInfoRow(entry.key, "${entry.value}");
+          }).toList(),
         ],
       ),
+    );
+  }
+
+  Widget _buildInfoRow(String title, String value) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Divider(color: Colors.grey, thickness: 1),
+      ],
     );
   }
 }
