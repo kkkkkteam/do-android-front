@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'screens/board/board_screen.dart';
 import 'screens/home/home_screen.dart';
-import 'screens/notification/notification_screen.dart';
 import 'screens/calendar/calendar_screen.dart';
 import 'screens/profile/profile_screen.dart';
 
@@ -43,7 +43,7 @@ class _NavigationHomeState extends State<NavigationHome> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const NotificationScreen(),
+    const BoardScreen(),
     const CalendarScreen(),
     const ProfileScreen(),
   ];
@@ -75,7 +75,7 @@ class _NavigationHomeState extends State<NavigationHome> {
                 label: '', // 빈 라벨
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
+                icon: Icon(Icons.forum),
                 label: '', // 빈 라벨
               ),
               BottomNavigationBarItem(

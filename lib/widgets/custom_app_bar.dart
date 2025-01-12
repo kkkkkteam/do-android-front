@@ -20,20 +20,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leading ??
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
-            child: Text(
-              'do.',
-              style: const TextStyle(
-                fontFamily: 'RubikScribble',
-                fontSize: 24,
-                color: Color(0xFF2E9629),
+            child: Center(
+              child: Text(
+                'do.',
+                style: const TextStyle(
+                  fontFamily: 'RubikScribble',
+                  fontSize: 24.3,
+                  color: Color(0xFF2E9629),
+                ),
               ),
             ),
           ),
       actions: actions ??
           [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.notifications, color: Colors.black),
+            Padding(
+              padding: const EdgeInsets.only(right:20.0),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.notifications_outlined, color: Colors.black),
+              ),
             ),
           ],
     );

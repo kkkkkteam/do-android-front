@@ -69,7 +69,17 @@ flutter:
       fonts:
         - asset: assets/fonts/Roboto-Bold.ttf
 
+    - family: Roboto1
+      fonts:
+        - asset: assets/fonts/RobotoFlex-VariableFont.ttf
 
+    - family: RubikScribble
+      fonts:
+        - asset: assets/fonts/RubikScribble-Regular.ttf
+
+    - family: dohyeon
+      fonts:
+        - asset: assets/fonts/BMDOHYEON_ttf.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
