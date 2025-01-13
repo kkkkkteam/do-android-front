@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'screens/admin/admin_main_screen.dart';
+import 'widgets/admin_navigation_bar.dart'; // 모듈화된 네비게이션 바
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: AdminMainScreen(), // const 제거
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: AdminNavigationBar(),
     );
   }
 }
