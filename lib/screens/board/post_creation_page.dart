@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../widgets/custom_board_app_bar.dart';
+import '../../widgets/custom_back_app_bar.dart';
 import '../../widgets/custom_textField.dart';
+import '../../widgets/custom_button.dart';
+
 
 class PostCreationPage extends StatefulWidget {
   @override
@@ -27,7 +29,7 @@ class _PostCreationPageState extends State<PostCreationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomBoardAppBar(title: '게시물 작성'), // BoardUploadAppBar 사용
+      appBar: CustomBackAppBar(title: '게시물 작성'), // BoardUploadAppBar 사용
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -83,32 +85,16 @@ class _PostCreationPageState extends State<PostCreationPage> {
             SizedBox(height: 60),
             // 업로드 버튼
             Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('업로드가 완료되었습니다!')),
-                  );
-                  // 게시물 작성 후 게시판 화면으로 돌아가기
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF2E9629),
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  '업로드',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'NanumGothic',
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
+              child: CustomButton(text: '업로드', onPressed: (){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('업로드가 완료되었습니다!')),
+                );
+                // 게시물 작성 후 게시판 화면으로 돌아가기
+                Navigator.pop(context);
+              },
+                color: Color(0xFF2E9629),
+            )),
+          ]
         ),
       ),
     );

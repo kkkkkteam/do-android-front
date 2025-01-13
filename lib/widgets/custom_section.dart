@@ -1,10 +1,36 @@
 import 'package:flutter/material.dart';
 
-class CustomSection extends StatelessWidget {
+class CustomSection extends StatefulWidget {
   final String title; // 섹션 제목
-  final List<Map<String, dynamic>> items; // 섹션 아이템 리스트
+  final List<Map<String, dynamic>> initialItems; // 초기 섹션 아이템 리스트
 
-  const CustomSection({required this.title, required this.items, Key? key}) : super(key: key);
+  const CustomSection({
+    required this.title,
+    required this.initialItems,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _CustomSectionState createState() => _CustomSectionState();
+}
+
+class _CustomSectionState extends State<CustomSection> {
+  late List<Map<String, dynamic>> items; // 동적으로 관리될 아이템 리스트
+
+  @override
+  void initState() {
+    super.initState();
+    items = List.from(widget.initialItems); // 초기 아이템 설정
+  }
+
+  void addItem(Map<String, dynamic> newItem) {
+    setState(() {
+      items.add(newItem); // 새 아이템 추가
+      if (items.length > 50) {
+        items.removeAt(0); // 크기가 50을 초과하면 첫 번째 아이템 삭제
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +41,7 @@ class CustomSection extends StatelessWidget {
         children: [
           // 섹션 제목
           Text(
-            title,
+            widget.title,
             style: const TextStyle(
               fontSize: 18,
               fontFamily: 'Jua',

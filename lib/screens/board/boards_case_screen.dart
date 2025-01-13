@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../widgets/custom_board_app_bar.dart'; // BoardUploadAppBar import
+import '../../widgets/custom_back_app_bar.dart'; // BoardUploadAppBar import
 import 'post_creation_page.dart'; // 게시물 작성 페이지 import
 import '../../widgets/search_textField.dart';
 import '../../widgets/custom_post.dart'; // PostCard import
@@ -13,7 +13,7 @@ class BoardsCaseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomBoardAppBar(title: title), // BoardUploadAppBar 사용
+      appBar: CustomBackAppBar(title: title), // BoardUploadAppBar 사용
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

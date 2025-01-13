@@ -3,6 +3,8 @@ import 'edit_profile_screen.dart';
 import '../../widgets/custom_progress_bar.dart'; // 수정된 ProgressBar
 import '../../widgets/custom_section.dart'; // 수정된 Section
 import 'password_change_screen.dart'; // 비밀번호 변경 화면
+import '../../widgets/custom_button.dart';
+import 'yearly_experience_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -58,34 +60,18 @@ class ProfileScreen extends StatelessWidget {
                         maxValue: 50000, // 최대 경험치
                       ),
                       const SizedBox(height: 30),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
+                      CustomButton(
+                          text: '프로필 사진 변경',
+                          onPressed: (){
+                            Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const EditProfileScreen()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2E9629),
-                          minimumSize: const Size(400, 40),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          "프로필 사진 변경",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Arial',
-                          ),
-                        ),
+                            MaterialPageRoute(builder: (context) => const EditProfileScreen()));},
+                          color: Color(0xFF2E9629)
                       ),
                       const SizedBox(height: 40),
                       CustomSection(
                         title: '정보',
-                        items: [
+                        initialItems: [
                           {'title': '사번', 'value': '2023010101'},
                           {'title': '소속', 'value': '음성 1센터'},
                           {'title': '입사일', 'value': '2023-01-01'},
@@ -95,7 +81,7 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(height: 30),
                       CustomSection(
                         title: '계정',
-                        items: [
+                        initialItems: [
                           {'title': '아이디', 'value': 'minsukim'},
                           {
                             'title': '비밀번호',
@@ -113,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(height: 30),
                       CustomSection(
                         title: '경험치',
-                        items: [
+                        initialItems: [
                           {'title': '최근 획득한 경험치', 'value': '5000 do'},
                           {
                             'title': '경험치 내역 확인',
@@ -130,7 +116,12 @@ class ProfileScreen extends StatelessWidget {
                             'icon': const Icon(Icons.chevron_right),
                             'onPressed': () {
                               // 특정 동작
-                              print('연도별 경험치 보기');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const YearlyExperiencePage()),
+                              );
                             },
                           },
                         ],

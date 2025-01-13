@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../widgets/custom_password_field.dart'; // 비밀번호 입력 필드
 import '../../widgets/custom_button.dart'; // 공통 버튼 위젯
+import '../../widgets/custom_title.dart';
+import '../../widgets/custom_back_app_bar.dart';
+
 
 class PasswordChangeScreen extends StatefulWidget {
   const PasswordChangeScreen({Key? key}) : super(key: key);
@@ -54,22 +57,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          '비밀번호 변경',
-          style: TextStyle(
-            fontSize: 14,
-            fontFamily: 'NanumGothic',
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
+      appBar: CustomBackAppBar(title: '비밀번호 변경'),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -88,12 +76,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    '비밀번호 입력',
-                    style: TextStyle(fontSize: 20, fontFamily: 'Jua'),
-                  ),
-                  const SizedBox(height: 15),
-                  const Divider(color: Color(0xFF2E9528), thickness: 4),
+                  const CustomTitle(title: '비밀번호 입력'),
                   const SizedBox(height: 50),
                   CustomPasswordField(
                     controller: _currentPasswordController,

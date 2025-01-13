@@ -19,8 +19,8 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF2E9528),
-        minimumSize: const Size(350, 50), // 버튼 크기
+        backgroundColor: Color(0xFF2E9529),
+        minimumSize: const Size(380, 50), // 버튼 크기
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12), // 모서리 둥글기
           side: BorderSide(color: borderColor, width: 1.5), // 테두리 설정
@@ -30,7 +30,7 @@ class CustomButton extends StatelessWidget {
         text,
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 18,
+          fontSize: 16,
           fontWeight: FontWeight.w600,
           fontFamily: 'NanumGothic',
         ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class CustomBoardAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomBackAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title; // 제목 추가
 
-  const CustomBoardAppBar({Key? key, required this.title}) : super(key: key);
+  const CustomBackAppBar({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
