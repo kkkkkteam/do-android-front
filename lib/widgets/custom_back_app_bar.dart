@@ -22,8 +22,7 @@ class CustomBackAppBar extends StatelessWidget implements PreferredSizeWidget {
         title, // 전달받은 제목 사용
         style: const TextStyle(
           fontSize: 18,
-          fontFamily: 'NanumGothic',
-          fontWeight: FontWeight.bold,
+          fontFamily: 'Dohyeon',
           color: Colors.black,
         ),
       ),

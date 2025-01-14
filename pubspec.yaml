@@ -10,14 +10,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  hive: ^2.2.3
+  http: ^0.13.5
+  flutter_secure_storage: ^5.0.2
   fl_chart: 0.36.4
   image_picker: ^0.8.7+4
   cupertino_icons: ^1.0.8
+  table_calendar: ^3.0.7 # table_calendar는 dependencies로 옮김
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  hive_generator: ^2.0.0
+  build_runner: ^2.3.3
   flutter_lints: ^4.0.0
 
 flutter:

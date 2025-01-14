@@ -10,6 +10,7 @@ class LoginChoiceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             Transform.translate(

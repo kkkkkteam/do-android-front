@@ -15,12 +15,19 @@ class UserNavigationBar extends StatefulWidget {
 
 class _UserNavigationBarState extends State<UserNavigationBar> {
   late int _selectedIndex;
+  Map<DateTime, List<Map<String, dynamic>>> _events = {}; // 일정 저장
 
-  static const List<Widget> _pages = [
-    HomeScreen(),
-    BoardScreen(), // 기본적으로 BoardScreen을 표시
-    CalendarScreen(),
-    ProfileScreen(),
+  static List<Widget> _pages(
+      Map<DateTime, List<Map<String, dynamic>>> events,
+      void Function(Map<DateTime, List<Map<String, dynamic>>>) onEventsChanged,
+      ) => [
+    const HomeScreen(),
+    const BoardScreen(),
+    CalendarScreen(
+      events: events,
+      onEventsChanged: onEventsChanged,
+    ),
+    const ProfileScreen(),
   ];
 
   @override
@@ -35,10 +42,16 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
     });
   }
 
+  void _updateEvents(Map<DateTime, List<Map<String, dynamic>>> newEvents) {
+    setState(() {
+      _events = newEvents; // 새로운 이벤트 데이터로 업데이트
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex], // 현재 선택된 화면 표시
+      body: _pages(_events, _updateEvents)[_selectedIndex], // 현재 선택된 화면 표시
       bottomNavigationBar: Container(
         height: 80,
         decoration: const BoxDecoration(

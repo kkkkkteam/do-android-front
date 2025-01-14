@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/user_navigation_bar.dart'; // 어드민으로 바꾸기
+import '../widgets/admin_navigation_bar.dart';
 import '../../widgets/custom_textField.dart';
 import '../../widgets/custom_button.dart';
 
@@ -9,6 +9,7 @@ class AdminLoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Transform.translate(
@@ -63,7 +64,7 @@ class AdminLoginScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const UserNavigationBar(),
+                            builder: (context) => const AdminNavigationBar(),
                           ),
                         );
                       }, color: Color(0xFF2E9529))
