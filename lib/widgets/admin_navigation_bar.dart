@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens/admin/admin_main_screen.dart'; // 관리자 홈 화면
 import '../screens/admin/admin_board_screen.dart'; // 게시판 화면
 import '../screens/admin/admin_group_screen.dart'; // 캘린더 화면
-import '../screens/admin/admin_exprience_screen.dart'; // 프로필 화면
-
+import '../screens/admin/admin_experience_screen.dart'; // 경험치 화면
 
 class AdminNavigationBar extends StatefulWidget {
   const AdminNavigationBar({Key? key}) : super(key: key);
@@ -19,8 +18,8 @@ class _AdminNavigationBarState extends State<AdminNavigationBar> {
   static const List<Widget> _pages = [
     AdminMainScreen(),    // 관리자 홈 화면
     AdminBoardScreen(),   // 게시판 화면
-    AdminGroupScreen(), // 캘린더 화면
-    AdminProfileScreen(), // 프로필 화면
+    AdminGroupScreen(),   // 캘린더 화면
+    AdminExperienceScreen(), // 경험치 화면
   ];
 
   // 네비게이션 아이템 선택 시 처리

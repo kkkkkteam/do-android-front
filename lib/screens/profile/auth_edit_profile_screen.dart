@@ -27,15 +27,20 @@ class _AuthEditProfileScreenState extends State<AuthEditProfileScreen> {
     'HR 관리자',
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    nameController = TextEditingController(text: widget.auth.name);
-    idController = TextEditingController(text: widget.auth.id);
-    departmentController = TextEditingController(text: widget.auth.department);
-    joinDateController = TextEditingController(text: widget.auth.joinDate);
-    selectedJobGroup = widget.auth.jobGroup;
+@override
+void initState() {
+  super.initState();
+  nameController = TextEditingController(text: widget.auth.name);
+  idController = TextEditingController(text: widget.auth.id);
+  departmentController = TextEditingController(text: widget.auth.department);
+  joinDateController = TextEditingController(text: widget.auth.joinDate);
+
+  // Ensure selectedJobGroup is valid and in the jobGroups list
+  selectedJobGroup = widget.auth.jobGroup;
+  if (!jobGroups.contains(selectedJobGroup)) {
+    selectedJobGroup = jobGroups.first; // Default to the first item if invalid
   }
+}
 
   Future<void> _selectJoinDate() async {
     DateTime? pickedDate = await showDatePicker(
@@ -52,18 +57,19 @@ class _AuthEditProfileScreenState extends State<AuthEditProfileScreen> {
   }
 
   void _saveChanges() {
-    Navigator.pop(
-      context,
-      Auth(
-        name: nameController.text,
-        id: idController.text,
-        department: departmentController.text,
-        joinDate: joinDateController.text,
-        jobGroup: selectedJobGroup,
-        yearlyExperience: widget.auth.yearlyExperience,
-      ),
-    );
-  }
+  Navigator.pop(
+    context,
+    Auth(
+      name: nameController.text,
+      id: idController.text,
+      department: departmentController.text,
+      joinDate: joinDateController.text,
+      jobGroup: selectedJobGroup,
+      yearlyExperience: widget.auth.yearlyExperience,
+    ),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
