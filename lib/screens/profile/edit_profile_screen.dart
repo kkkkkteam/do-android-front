@@ -127,11 +127,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 padding: const EdgeInsets.only(bottom: 30),
                 child: CustomButton(
                   text: '변경',
-                  color: Color(0xFF2E9629),
+                  color: const Color(0xFF2E9629),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('프로필 사진이 변경되었습니다!')),
-                    ); // SnackBar 표시
+                      const SnackBar(
+                        content: Text('프로필 사진이 변경되었습니다!'),
+                        duration: Duration(seconds: 2), // 지속 시간 설정
+                      ),
+                    );
+                    Navigator.pop(context, selectedImage); // 선택된 이미지 경로 반환
                   },
                 ),
               ),

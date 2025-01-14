@@ -24,7 +24,7 @@ class CustomTitle extends StatelessWidget {
         Center(
           child: Container(
             height: 4,
-            color: const Color(0xFF2E9528), // 고정된 구분선 색상
+            color: const Color(0xFF2E9529), // 고정된 구분선 색상
           ),
         ),
       ],

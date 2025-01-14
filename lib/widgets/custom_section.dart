@@ -64,6 +64,8 @@ class _CustomSectionState extends State<CustomSection> {
               final item = items[index];
               return Column(
                 children: [
+                  if (!item.containsKey('icon'))
+                    SizedBox(height: 10,),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -107,6 +109,8 @@ class _CustomSectionState extends State<CustomSection> {
                       ),
                     ],
                   ),
+                  if (!item.containsKey('icon'))
+                    SizedBox(height: 10,),
                   const Divider(color: Color(0xFFD9D9D9), thickness: 1),
                 ],
               );

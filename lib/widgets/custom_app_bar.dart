@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/notification/notification_screen.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title; // 앱바 타이틀
@@ -27,6 +28,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   fontFamily: 'RubikScribble',
                   fontSize: 24.3,
                   color: Color(0xFF2E9629),
+                  fontWeight: FontWeight.bold
                 ),
               ),
             ),
@@ -36,7 +38,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Padding(
               padding: const EdgeInsets.only(right:20.0),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationScreen(),));
+                },
                 icon: const Icon(Icons.notifications_outlined, color: Colors.black),
               ),
             ),

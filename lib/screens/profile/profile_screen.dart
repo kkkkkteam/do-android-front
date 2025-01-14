@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'edit_profile_screen.dart';
-import '../../widgets/custom_progress_bar.dart'; // 수정된 ProgressBar
-import '../../widgets/custom_section.dart'; // 수정된 Section
-import 'password_change_screen.dart'; // 비밀번호 변경 화면
+import '../../widgets/custom_progress_bar.dart';
+import '../../widgets/custom_section.dart';
+import 'password_change_screen.dart';
 import '../../widgets/custom_button.dart';
+import 'experience_list_screen.dart';
 import 'yearly_experience_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String profileImage = 'assets/images/man-01.png';
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +69,21 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 30),
                       CustomButton(
-                          text: '프로필 사진 변경',
-                          onPressed: (){
-                            Navigator.push(
+                        text: '프로필 사진 변경',
+                        onPressed: () async {
+                          final selectedImage = await Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const EditProfileScreen()));},
-                          color: Color(0xFF2E9629)
+                            MaterialPageRoute(
+                              builder: (context) => const EditProfileScreen(),
+                            ),
+                          );
+                          if (selectedImage != null && selectedImage is String) {
+                            setState(() {
+                              profileImage = selectedImage; // 선택된 이미지 업데이트
+                            });
+                          }
+                        },
+                        color: const Color(0xFF2E9629),
                       ),
                       const SizedBox(height: 40),
                       CustomSection(
@@ -106,8 +123,12 @@ class ProfileScreen extends StatelessWidget {
                             'value': '보기',
                             'icon': const Icon(Icons.chevron_right),
                             'onPressed': () {
-                              // 특정 동작
-                              print('경험치 내역 확인');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ExperienceListScreen(),
+                                ),
+                              );
                             },
                           },
                           {
@@ -115,12 +136,11 @@ class ProfileScreen extends StatelessWidget {
                             'value': '보기',
                             'icon': const Icon(Icons.chevron_right),
                             'onPressed': () {
-                              // 특정 동작
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                    const YearlyExperiencePage()),
+                                  builder: (context) => const YearlyExperienceScreen(),
+                                ),
                               );
                             },
                           },
@@ -132,15 +152,15 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
             // 중앙에 프로필 이미지
-            const Positioned(
+            Positioned(
               top: 130,
               child: CircleAvatar(
                 radius: 70,
-                backgroundColor: Color(0xFF2E9629), // 초록색 테두리
+                backgroundColor: const Color(0xFF2E9629), // 초록색 테두리
                 child: CircleAvatar(
                   radius: 67,
-                  backgroundColor: Color(0xFFF9F9F9),
-                  backgroundImage: AssetImage('assets/man-01.png'), // 프로필 이미지
+                  backgroundColor: const Color(0xFFF9F9F9),
+                  backgroundImage: AssetImage(profileImage), // 선택된 프로필 이미지 적용
                 ),
               ),
             ),

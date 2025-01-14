@@ -5,21 +5,29 @@ import '../screens/calendar/calendar_screen.dart';
 import '../screens/profile/profile_screen.dart';
 
 class UserNavigationBar extends StatefulWidget {
-  const UserNavigationBar({Key? key}) : super(key: key);
+  final int initialIndex; // 초기 화면 인덱스
+
+  const UserNavigationBar({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
   _UserNavigationBarState createState() => _UserNavigationBarState();
 }
 
 class _UserNavigationBarState extends State<UserNavigationBar> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   static const List<Widget> _pages = [
     HomeScreen(),
-    BoardScreen(),
+    BoardScreen(), // 기본적으로 BoardScreen을 표시
     CalendarScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex; // 초기 인덱스 설정
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -57,7 +65,7 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
       icon: Icon(
         icon,
         color: _selectedIndex == index
-            ? const Color(0xFF2E9528) // 선택된 아이템 색상
+            ? const Color(0xFF2E9529) // 선택된 아이템 색상
             : Colors.grey, // 선택되지 않은 아이템 색상
       ),
       iconSize: 28, // 아이콘 크기

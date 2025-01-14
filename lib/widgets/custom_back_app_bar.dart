@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/notification/notification_screen.dart';
 
 class CustomBackAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title; // 제목 추가
@@ -30,7 +31,12 @@ class CustomBackAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationScreen(),));
+            },
             icon: const Icon(Icons.notifications_outlined, color: Colors.black),
           ),
         ),

@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'boards_case_screen.dart'; // BoardsCaseScreen import
 import '../../widgets/custom_app_bar.dart'; // CustomAppBar import
 import '../../widgets/custom_post.dart'; // PostCard import
+import 'article_screen.dart';
+import 'anony_board_screen.dart';
 
 class BoardScreen extends StatelessWidget {
   const BoardScreen({Key? key}) : super(key: key);
 
   // 게시판 목록
   static const List<String> boardList = [
-    '자유게시판',
-    '비밀게시판',
+    '전체게시판',
     '음성1센터 게시판',
     '음성2센터 게시판',
     '용인백암센터 게시판',
@@ -35,17 +36,14 @@ class BoardScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: () {
-                    // 사내 게시판 클릭시
-                  },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40.0),
                     child: Text(
                       '사내 게시판',
                       style: TextStyle(
                         fontSize: 16,
-                        fontFamily: 'Roboto1',
-                        fontWeight: FontWeight.w400,
+                        fontFamily: 'NanumGothic',
+                        fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline,
                         color: Colors.black,
                       ),
@@ -54,7 +52,10 @@ class BoardScreen extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    // 익명 게시판 클릭 시
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AnonyBoardScreen(),));
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40.0),
@@ -62,7 +63,7 @@ class BoardScreen extends StatelessWidget {
                       '익명 게시판',
                       style: TextStyle(
                         fontSize: 16,
-                        fontFamily: 'Roboto1',
+                        fontFamily: 'NanumGothic',
                         color: Colors.grey,
                       ),
                     ),
@@ -75,7 +76,7 @@ class BoardScreen extends StatelessWidget {
             // 게시판 목록
             const Text(
               '게시판',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontFamily: 'NanumGothic',fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Container(
@@ -99,21 +100,30 @@ class BoardScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontFamily: 'NanumGothic',
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 12),
             InkWell(
               onTap: () {
-                // 게시물 클릭 시 동작
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ArticleScreen(
+                      title: '긴급상황: 이것은 제목입니다',
+                      content: '안녕하세요, 이것은 내용입니다. 감자튀김이 있어요...',
+                    ),
+                  ),
+                );
               },
               child: PostCard(
                 title: '긴급상황: 이것은 제목입니다',
-                content: '안녕하세요, 이것은 내용입니다. 감자튀김이 있어요...', // 수정된 매개변수 이름
+                content: '안녕하세요, 이것은 내용입니다. 감자튀김이 있어요...',
                 author: '익명',
                 date: '2025.01.22',
               ),
             ),
+
           ],
         ),
       ),

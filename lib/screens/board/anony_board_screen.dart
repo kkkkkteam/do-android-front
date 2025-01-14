@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import '../../widgets/custom_back_app_bar.dart'; // CustomBackAppBar import
+import '../../widgets/custom_app_bar.dart'; // CustomBackAppBar import
 import 'post_creation_screen.dart'; // PostCreationScreen import
 import '../../widgets/search_textField.dart';
 import '../../widgets/custom_post.dart'; // PostCard import
 import 'article_screen.dart'; // ArticleScreen import
+import '../../widgets/user_navigation_bar.dart';
 
-class BoardsCaseScreen extends StatefulWidget {
-  final String title;
+class AnonyBoardScreen extends StatefulWidget {
 
-  const BoardsCaseScreen({Key? key, required this.title}) : super(key: key);
+  const AnonyBoardScreen({Key? key}) : super(key: key);
 
   @override
-  State<BoardsCaseScreen> createState() => _BoardsCaseScreenState();
+  State<AnonyBoardScreen> createState() => _BoardsCaseScreenState();
 }
 
-class _BoardsCaseScreenState extends State<BoardsCaseScreen> {
+class _BoardsCaseScreenState extends State<AnonyBoardScreen> {
   final List<Map<String, String>> _posts = [
     {
       'title': '긴급상황: 이것은 제목입니다 0',
@@ -74,13 +74,53 @@ class _BoardsCaseScreenState extends State<BoardsCaseScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomBackAppBar(title: widget.title),
+      appBar: CustomAppBar(title: '익명 게시판'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const UserNavigationBar(initialIndex: 1,),));
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40.0),
+                      child: Text(
+                        '사내 게시판',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'NanumGothic',
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40.0),
+                      child: Text(
+                        '익명 게시판',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'NanumGothic',
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30,),
               // 검색 창
               SearchTextField(
                 hintText: '게시물의 제목 또는 작성자를 입력하세요',

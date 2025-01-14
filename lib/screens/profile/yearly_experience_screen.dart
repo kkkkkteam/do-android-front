@@ -3,8 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../widgets/custom_title.dart';
 import '../../widgets/custom_back_app_bar.dart';
 
-class YearlyExperiencePage extends StatelessWidget {
-  const YearlyExperiencePage({Key? key}) : super(key: key);
+class YearlyExperienceScreen extends StatelessWidget {
+  const YearlyExperienceScreen({Key? key}) : super(key: key);
 
   final List<Map<String, dynamic>> experienceData = const [
     {"year": "2021년", "experience": 2000},
