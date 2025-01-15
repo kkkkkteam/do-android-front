@@ -23,7 +23,6 @@ class _AdminGroupScreenState extends State<AdminGroupScreen> {
     {"code": "T", "name": "기술 직군"},
   ];
 
-  // 소속 추가
   void addAffiliation() {
     String newAffiliation = "";
     showDialog(
@@ -71,6 +70,7 @@ class _AdminGroupScreenState extends State<AdminGroupScreen> {
       },
     );
   }
+
   void addGroup(Map<String, dynamic> affiliation) {
     String newGroup = "";
     showDialog(
@@ -122,7 +122,6 @@ class _AdminGroupScreenState extends State<AdminGroupScreen> {
     );
   }
 
-  // 직군 추가
   void addJobPosition() {
     String newCode = "";
     String newName = "";
@@ -180,7 +179,6 @@ class _AdminGroupScreenState extends State<AdminGroupScreen> {
     );
   }
 
-  // 그룹 삭제 다이얼로그
   void showDeleteGroupDialog(Map<String, dynamic> affiliation) {
     showDialog(
       context: context,
@@ -226,7 +224,6 @@ class _AdminGroupScreenState extends State<AdminGroupScreen> {
     );
   }
 
-  // 직군 삭제
   void deleteJobPosition(Map<String, String> position) {
     setState(() {
       jobPositions.remove(position);
@@ -240,6 +237,7 @@ class _AdminGroupScreenState extends State<AdminGroupScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        automaticallyImplyLeading: false, // 뒤로가기 버튼 제거
         title: const Text(
           'do.',
           style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontFamily: 'RubikScribble', fontSize: 30),
@@ -286,7 +284,6 @@ class _AdminGroupScreenState extends State<AdminGroupScreen> {
                         },
                         child: const Text("+ 그룹 추가"),
                       ),
-
                     ],
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/auth.dart';
 import 'admin_profile_screen.dart';
+import '../../widgets/search_textField.dart';
 
 class AdminMainScreen extends StatefulWidget {
   const AdminMainScreen({Key? key}) : super(key: key);
@@ -198,8 +199,11 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                   ElevatedButton(
                     onPressed: () {
                       // 직군 형식 검증
-                      final validPrefixes = ['F', 'B', 'G', 'T']; // 허용되는 알파벳 접두사
-                      bool isValidJob = validPrefixes.any((prefix) => job.startsWith(prefix));
+                      final allowedJobs = ['F현장직군', 'B관리직군', 'G성장전략', 'T기술직군']; // 허용되는 정확한 값만 포함
+                      if (!allowedJobs.contains(job)) {
+                        _showErrorDialog("직군 형식을 맞춰주세요.");
+                        return;
+                      }
 
                       if (name.isEmpty || id.isEmpty || team.isEmpty || joinDate.isEmpty || job.isEmpty) {
                         _showErrorDialog("모든 필드를 입력해야 합니다.");
@@ -231,6 +235,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                     ),
                     child: const Text("계정 생성"),
                   ),
+
+
                 ],
               ),
             ),
@@ -262,6 +268,73 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
     );
   }
 
+  void _confirmDeleteUser(int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text("삭제 확인", style: TextStyle(color: Colors.red)),
+          content: const Text("정말로 삭제하시겠습니까?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // 다이얼로그 닫기
+              },
+              child: const Text("취소"),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteUser(index); // 삭제 실행
+                Navigator.pop(context); // 다이얼로그 닫기
+              },
+              child: const Text("삭제", style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteUser(int index) {
+    setState(() {
+      // `filteredUsers`에서 삭제
+      final deletedUser = filteredUsers.removeAt(index);
+      // 원본 `users`에서도 삭제
+      users.removeWhere((user) => user["id"] == deletedUser["id"]);
+    });
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text("로그아웃"),
+          content: const Text("정말로 로그아웃 하시겠습니까?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // 다이얼로그 닫기
+              },
+              child: const Text("아니요"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // 다이얼로그 닫기
+                Navigator.pop(context); // 이전 화면으로 이동
+              },
+              child: const Text(
+                "네",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 
   InputDecoration _inputDecoration(String label) {
@@ -283,151 +356,217 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: Colors.white,
-            pinned: true,
-            elevation: 0,
-            title: const Text(
-              'do.',
-              style: TextStyle(
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'RubikScribble',
-                fontSize: 30,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: Colors.white,
+              pinned: true,
+              elevation: 0,
+              automaticallyImplyLeading: false, // 기본 뒤로가기 버튼 제거
+              title: const Text(
+                'do.',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'RubikScribble',
+                  fontSize: 30,
+                ),
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.logout, color: Colors.black),
+                  onPressed: _showLogoutDialog, // 로그아웃 다이얼로그 호출
+                ),
+              ],
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    SearchTextField(hintText: '사원을 검색해보세요', onChanged: filterUsers),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '총 ${users.length}명',
+                          style: const TextStyle(fontFamily: 'NanumGothic',fontSize: 14, fontWeight: FontWeight.bold,color: Colors.black),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white, // 배경색을 흰색으로 설정
+                            borderRadius: BorderRadius.circular(8.0), // 둥근 모서리 설정 (선택 사항)
+                            border: Border.all(color: Colors.grey, width: 1.0), // 테두리 추가 (선택 사항)
+                          ),
+                          child: DropdownButton<String>(
+                            value: selectedSort,
+                            onChanged: (newSort) {
+                              setState(() {
+                                selectedSort = newSort!;
+                                applySort();
+                              });
+                            },
+                            underline: Container(), // 기본 밑줄 제거
+                            items: const [
+                              DropdownMenuItem(
+                                value: "등록순",
+                                child: Text(
+                                  "등록순",
+                                  style: TextStyle(fontFamily: 'NanumGothic', fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: "즐겨찾기순",
+                                child: Text(
+                                  "즐겨찾기순",
+                                  style: TextStyle(fontFamily: 'NanumGothic', fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  TextField(
-                    onChanged: filterUsers,
-                    decoration: _inputDecoration("검색"),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '총 ${users.length}명',
-                        style: const TextStyle(fontSize: 14, color: Colors.black),
+            SliverFillRemaining(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF3F3F3),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                child: filteredUsers.isEmpty
+                    ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.error_outline, // 느낌표 아이콘
+                        color: Colors.grey,
+                        size: 48, // 아이콘 크기
                       ),
-                      DropdownButton<String>(
-                        value: selectedSort,
-                        onChanged: (newSort) {
-                          setState(() {
-                            selectedSort = newSort!;
-                            applySort();
-                          });
-                        },
-                        items: const [
-                          DropdownMenuItem(value: "등록순", child: Text("등록순")),
-                          DropdownMenuItem(value: "즐겨찾기순", child: Text("즐겨찾기순")),
-                        ],
+                      SizedBox(height: 8), // 아이콘과 텍스트 간격
+                      Text(
+                        "검색 결과가 없습니다.",
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          ),
-          SliverFillRemaining(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFF3F3F3),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              child: filteredUsers.isEmpty
-                  ? const Center(
-                child: Text(
-                  "검색 결과가 없습니다.",
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
-                ),
-              )
-                  : ListView.builder(
-                padding: const EdgeInsets.only(top: 20),
-                itemCount: filteredUsers.length,
-                itemBuilder: (context, index) {
-                  final user = filteredUsers[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Auth auth = Auth(
-                        name: user["name"],
-                        id: user["id"] ?? "",
-                        department: user["team"] ?? "",
-                        joinDate: user["joinDate"] ?? "",
-                        jobGroup: user["job"] ?? "",
-                        profileImage: user["profileImage"] ?? "assets/images/default_profile.png",
-                        yearlyExperience: const {}, // Default for this example
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AuthProfileScreen(auth: auth),
+                )
+                    : ListView.builder(
+                  padding: const EdgeInsets.only(top: 20),
+                  itemCount: filteredUsers.length,
+                  itemBuilder: (context, index) {
+                    final user = filteredUsers[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Auth auth = Auth(
+                          name: user["name"],
+                          id: user["id"] ?? "",
+                          department: user["team"] ?? "",
+                          joinDate: user["joinDate"] ?? "",
+                          jobGroup: user["job"] ?? "",
+                          profileImage: user["profileImage"] ?? "assets/images/default_profile.png",
+                          yearlyExperience: const {}, // Default for this example
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AuthProfileScreen(auth: auth),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(11),
                         ),
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(11),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 25,
-                                backgroundImage: AssetImage(_getProfileImage(user)),
-                                backgroundColor: Colors.grey[200],
-                              ),
-                              const SizedBox(width: 12),
-                              Column(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center, // 텍스트와 아이콘 위쪽 정렬
+                          children: [
+                            // 왼쪽: 프로필 이미지
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundImage: AssetImage(_getProfileImage(user)),
+                              backgroundColor: Colors.grey[200],
+                            ),
+                            const SizedBox(width: 12),
+                            // 가운데: 텍스트 정보 (줄바꿈 가능)
+                            Expanded(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     user["name"],
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
                                       fontSize: 14,
+                                      fontFamily: 'Dohyeon'
                                     ),
                                   ),
+                                  const SizedBox(height: 4), // 이름과 소속 간 간격
                                   Text(
-                                    "소속: ${user["team"]} | 직군: ${user["job"]}",
-                                    style: const TextStyle(fontSize: 12),
+                                    "소속: ${user["team"]}\n직군: ${user["job"]}",
+                                    style: const TextStyle(fontSize: 12, fontFamily: 'NanumGothic', fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              user["isStarred"] ? Icons.star : Icons.star_border,
-                              color: user["isStarred"] ? Colors.yellow : Colors.grey,
                             ),
-                            onPressed: () => toggleStar(index),
-                          ),
-                        ],
+                            const SizedBox(width: 12),
+                            // 오른쪽: 즐겨찾기 버튼과 점 세 개 아이콘
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    user["isStarred"] ? Icons.star : Icons.star_border,
+                                    color: user["isStarred"] ? Colors.yellow : Colors.grey,
+                                  ),
+                                  onPressed: () => toggleStar(index),
+                                ),
+                                PopupMenuButton<String>(
+                                  onSelected: (value) {
+                                    if (value == 'delete') {
+                                      _confirmDeleteUser(index);
+                                    }
+                                  },
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: const [
+                                          SizedBox(width: 8),
+                                          Text("삭제"),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  icon: const Icon(Icons.more_vert),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: showAddUserDialog,
         backgroundColor: const Color(0xFF2E9629),
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );

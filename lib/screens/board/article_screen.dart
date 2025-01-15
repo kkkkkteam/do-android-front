@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../screens/notification/notification_screen.dart';
-
 class ArticleScreen extends StatefulWidget {
   final String title;
   final String content;
+  final DateTime dateTime;
+  final String authorName;
 
   const ArticleScreen({
     Key? key,
     required this.title,
     required this.content,
+    required this.dateTime,
+    required this.authorName,
   }) : super(key: key);
 
   @override
@@ -16,17 +18,15 @@ class ArticleScreen extends StatefulWidget {
 }
 
 class _ArticleScreenState extends State<ArticleScreen> {
-  int viewCount = 10231;
-  DateTime postDate = DateTime(2025, 1, 22, 13, 4);
+  int viewCount = 10231; // 기본 조회수
   TextEditingController _commentController = TextEditingController();
-  String currentUserName = "장서인";
   List<Map<String, dynamic>> comments = [];
 
   void _addCommentOrReply() {
     setState(() {
       if (_commentController.text.isNotEmpty) {
         comments.add({
-          "name": currentUserName,
+          "name": widget.authorName,
           "time": DateTime.now(),
           "content": _commentController.text,
           "likes": 0,
@@ -38,7 +38,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = '${postDate.year}.${postDate.month.toString().padLeft(2, '0')}.${postDate.day.toString().padLeft(2, '0')} ${postDate.hour.toString().padLeft(2, '0')}:${postDate.minute.toString().padLeft(2, '0')}';
+    String formattedDate =
+        '${widget.dateTime.year}.${widget.dateTime.month.toString().padLeft(2, '0')}.${widget.dateTime.day.toString().padLeft(2, '0')} ${widget.dateTime.hour.toString().padLeft(2, '0')}:${widget.dateTime.minute.toString().padLeft(2, '0')}';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -62,17 +63,6 @@ class _ArticleScreenState extends State<ArticleScreen> {
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationScreen(),));
-            },
-          ),
-        ],
       ),
       body: GestureDetector(
         onTap: () {
@@ -85,16 +75,25 @@ class _ArticleScreenState extends State<ArticleScreen> {
             children: [
               Text(
                 '$formattedDate  |  조회 $viewCount',
-                style: const TextStyle(fontFamily: 'NanumGothic',fontSize: 12, color: Colors.grey),
+                style: const TextStyle(
+                    fontFamily: 'NanumGothic', fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 8),
               Text(
                 widget.title,
                 style: const TextStyle(fontFamily: 'Dohyeon', fontSize: 20),
               ),
+              const SizedBox(height: 4),
+              Text(
+                '작성자: ${widget.authorName}',
+                style: const TextStyle(
+                    fontFamily: 'NanumGothic',
+                    fontSize: 12,
+                    color: Colors.grey),
+              ),
               const SizedBox(height: 16),
               const Divider(color: Colors.grey),
-              const SizedBox(height: 10,),
+              const SizedBox(height: 10),
               Text(
                 widget.content,
                 style: const TextStyle(fontSize: 14, height: 1.5),
@@ -106,7 +105,10 @@ class _ArticleScreenState extends State<ArticleScreen> {
                 children: [
                   Text(
                     '댓글 ${comments.length}',
-                    style: const TextStyle(fontFamily: 'NanumGothic',fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontFamily: 'NanumGothic',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
                   ),
                   PopupMenuButton<String>(
                     onSelected: (value) {},
@@ -117,7 +119,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                           value: 'latest',
                           child: Container(
                             decoration: const BoxDecoration(
-                              color: Colors.white, // 흰색 배경
+                              color: Colors.white,
                             ),
                             child: const Text('최신 순'),
                           ),
@@ -126,14 +128,14 @@ class _ArticleScreenState extends State<ArticleScreen> {
                           value: 'mostLiked',
                           child: Container(
                             decoration: const BoxDecoration(
-                              color: Colors.white, // 흰색 배경
+                              color: Colors.white,
                             ),
                             child: const Text('좋아요 많은 순'),
                           ),
                         ),
                       ];
                     },
-                    color: Colors.white, // PopupMenu 전체 배경 흰색
+                    color: Colors.white,
                   ),
                 ],
               ),
@@ -152,17 +154,20 @@ class _ArticleScreenState extends State<ArticleScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const CircleAvatar(
-                              backgroundImage: NetworkImage("https://via.placeholder.com/40"),
+                              backgroundImage: NetworkImage(
+                                  "https://via.placeholder.com/40"),
                               radius: 20,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     comment["name"],
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(comment["content"]),

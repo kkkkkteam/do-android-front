@@ -6,6 +6,8 @@ import 'password_change_screen.dart';
 import '../../widgets/custom_button.dart';
 import 'experience_list_screen.dart';
 import 'yearly_experience_screen.dart';
+import '../../screens/login_choice_screen.dart';
+import '../../utils/token_storage.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -16,6 +18,14 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String profileImage = 'assets/images/man-01.png';
+  Future<void> _logout() async {
+    final tokenStorage = TokenStorage();
+    await tokenStorage.clearTokens(); // 저장된 모든 토큰 제거
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginChoiceScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               'Lv.F1-I', // 사용자 레벨
                               style: TextStyle(
                                 fontSize: 20,
-                                fontFamily: 'Jua',
+                                fontFamily: 'Dohyeon',
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -55,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               '김민수', // 사용자 이름
                               style: TextStyle(
                                 fontSize: 25,
-                                fontFamily: 'Jua',
+                                fontFamily: 'Dohyeon',
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -109,6 +119,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 MaterialPageRoute(builder: (context) => const PasswordChangeScreen()),
                               );
+                            },
+                          },
+                          {
+                            'title': '로그아웃',
+                            'value': '',
+                            'icon': const Icon(Icons.chevron_right),
+                            'onPressed': () {
+                              _logout();
                             },
                           },
                         ],

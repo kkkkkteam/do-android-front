@@ -44,7 +44,7 @@ class _CustomSectionState extends State<CustomSection> {
             widget.title,
             style: const TextStyle(
               fontSize: 18,
-              fontFamily: 'Jua',
+              fontFamily: 'Dohyeon',
             ),
           ),
           const SizedBox(height: 8),

@@ -7,7 +7,6 @@ import 'article_screen.dart'; // ArticleScreen import
 import '../../widgets/user_navigation_bar.dart';
 
 class AnonyBoardScreen extends StatefulWidget {
-
   const AnonyBoardScreen({Key? key}) : super(key: key);
 
   @override
@@ -89,7 +88,10 @@ class _BoardsCaseScreenState extends State<AnonyBoardScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const UserNavigationBar(initialIndex: 1,),));
+                            builder: (context) => const UserNavigationBar(
+                              initialIndex: 1,
+                            ),
+                          ));
                     },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40.0),
@@ -120,7 +122,7 @@ class _BoardsCaseScreenState extends State<AnonyBoardScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 30,),
+              const SizedBox(height: 30),
               // 검색 창
               SearchTextField(
                 hintText: '게시물의 제목 또는 작성자를 입력하세요',
@@ -145,6 +147,8 @@ class _BoardsCaseScreenState extends State<AnonyBoardScreen> {
                           builder: (context) => ArticleScreen(
                             title: post['title']!,
                             content: post['content']!,
+                            dateTime: DateTime.parse(post['date']!),
+                            authorName: post['author']!,
                           ),
                         ),
                       );

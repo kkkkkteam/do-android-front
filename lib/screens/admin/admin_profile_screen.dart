@@ -86,6 +86,7 @@ class _AuthProfileScreenState extends State<AuthProfileScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -143,11 +144,14 @@ class _AuthProfileScreenState extends State<AuthProfileScreen> {
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            _buildProfileInfo(levelInfo, totalExperience),
-            const Center(child: Text('달력 탭')),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TabBarView(
+            children: [
+              _buildProfileInfo(levelInfo, totalExperience),
+              const Center(child: Text('달력 탭')),
+            ],
+          ),
         ),
       ),
     );

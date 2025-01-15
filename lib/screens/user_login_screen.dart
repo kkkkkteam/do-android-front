@@ -4,6 +4,7 @@ import '../../widgets/custom_textField.dart';
 import '../../widgets/custom_button.dart';
 import 'package:do_frontend/services/auth_service.dart';
 import 'package:do_frontend/utils/token_storage.dart';
+import 'login_choice_screen.dart'; // LoginChoiceScreen import
 
 class UserLoginScreen extends StatefulWidget {
   const UserLoginScreen({Key? key}) : super(key: key);
@@ -87,74 +88,87 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // 키보드가 올라올 때 화면이 overflow되지 않도록 SingleChildScrollView 추가
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            children: [
-              SizedBox(height: 80), // 상단 여백
-              Text(
-                '사용자 로그인',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.bold,
-                ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 80), // 상단 여백
+                  const Text(
+                    '사용자 로그인',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20), // 간격 추가
+                  const Text(
+                    'do.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF2E9529),
+                      fontSize: 100,
+                      fontFamily: 'RubikScribble',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 150), // 입력 필드 전 간격
+                  if (_errorMessage != null) ...[
+                    Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                  CustomTextField(
+                    hintText: '아이디를 입력하세요',
+                    borderColor: const Color(0xFF2E9529),
+                    maxLines: 1,
+                    controller: _usernameController,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: '비밀번호를 입력하세요',
+                    borderColor: const Color(0xFF2E9529),
+                    maxLines: 1,
+                    obscureText: true,
+                    controller: _passwordController,
+                  ),
+                  const SizedBox(height: 40),
+                  _isLoading
+                      ? const CircularProgressIndicator(
+                    color: Color(0xFF2E9529),
+                  )
+                      : CustomButton(
+                    text: '로그인',
+                    onPressed: _login,
+                    color: const Color(0xFF2E9529),
+                  ),
+                ],
               ),
-              SizedBox(height: 20), // 간격 추가
-              // 'do.' 텍스트
-              Text(
-                'do.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF2E9529),
-                  fontSize: 80,
-                  fontFamily: 'RubikScribble',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 150), // 입력 필드 전 간격
-              // 에러 메시지 표시
-              if (_errorMessage != null) ...[
-                Text(
-                  _errorMessage!,
-                  style: TextStyle(color: Colors.red),
-                ),
-                SizedBox(height: 10),
-              ],
-              // 아이디 입력 필드
-              CustomTextField(
-                hintText: '아이디를 입력하세요',
-                borderColor: Color(0xFF2E9529),
-                maxLines: 1,
-                controller: _usernameController,
-              ),
-              SizedBox(height: 20),
-              // 비밀번호 입력 필드
-              CustomTextField(
-                hintText: '비밀번호를 입력하세요',
-                borderColor: Color(0xFF2E9529),
-                maxLines: 1,
-                obscureText: true,
-                controller: _passwordController,
-              ),
-              SizedBox(height: 40),
-              // 로그인 버튼 또는 로딩 인디케이터
-              _isLoading
-                  ? CircularProgressIndicator(
-                color: Color(0xFF2E9529),
-              )
-                  : CustomButton(
-                text: '로그인',
-                onPressed: _login,
-                color: Color(0xFF2E9529),
-              ),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            top: 40,
+            left: 10, // 왼쪽으로 위치 변경
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginChoiceScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

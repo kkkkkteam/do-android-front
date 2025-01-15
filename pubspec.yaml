@@ -17,6 +17,7 @@ dependencies:
   image_picker: ^0.8.7+4
   cupertino_icons: ^1.0.8
   table_calendar: ^3.0.7 # table_calendar는 dependencies로 옮김
+  url_launcher: ^6.0.20
 
 dev_dependencies:
   flutter_test:

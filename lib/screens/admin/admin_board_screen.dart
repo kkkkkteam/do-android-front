@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'admin_post_creation.dart';
+import '../../screens/board/article_screen.dart';
 
 class AdminBoardScreen extends StatefulWidget {
   const AdminBoardScreen({Key? key}) : super(key: key);
@@ -20,11 +21,13 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
   }
 
   void addPost(String title, String content, bool isUrgent) {
+    final now = DateTime.now();
     setState(() {
       posts.insert(0, {
         'title': title,
         'content': content,
-        'date': DateTime.now().toString().split(' ')[0],
+        'date': '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}',
+        'time': '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}',
         'author': isUrgent ? '긴급' : '일반',
       });
       filterPosts(searchQuery);
@@ -53,10 +56,12 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
+        automaticallyImplyLeading: false, // 왼쪽 뒤로가기 버튼 제거
         title: const Text(
           'do.',
           style: TextStyle(
@@ -112,31 +117,52 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
                   final post = entry.value;
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: _buildPostCard(
-                        title: post['title'],
-                        titleStyle: const TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Dohyeon',
-                          fontWeight: FontWeight.w400,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ArticleScreen(
+                              title: post['title'],
+                              content: post['content'],
+                              dateTime: DateTime.parse(
+                                  '${post['date']} ${post['time']}'),
+                              authorName: post['author'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: _buildPostCard(
+                          title: post['title'],
+                          titleStyle: const TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'Dohyeon',
+                            fontWeight: FontWeight.w400,
+                          ),
+                          content: post['content'],
+                          contentStyle: const TextStyle(
+                            fontSize: 10,
+                            fontFamily: 'NanumGothic',
+                          ),
+                          date: post['date'],
+                          dateStyle: const TextStyle(
+                            fontSize: 7,
+                            fontFamily: 'NanumGothic',
+                          ),
+                          time: post['time'],
+                          timeStyle: const TextStyle(
+                            fontSize: 7,
+                            fontFamily: 'NanumGothic',
+                          ),
+                          author: post['author'],
+                          authorStyle: const TextStyle(
+                            fontSize: 7,
+                            fontFamily: 'NanumGothic',
+                          ),
+                          onDelete: () => deletePost(index),
                         ),
-                        content: post['content'],
-                        contentStyle: const TextStyle(
-                          fontSize: 10,
-                          fontFamily: 'NanumGothic',
-                        ),
-                        date: post['date'],
-                        dateStyle: const TextStyle(
-                          fontSize: 7,
-                          fontFamily: 'NanumGothic',
-                        ),
-                        author: post['author'],
-                        authorStyle: const TextStyle(
-                          fontSize: 7,
-                          fontFamily: 'NanumGothic',
-                        ),
-                        onDelete: () => deletePost(index),
                       ),
                     ),
                   );
@@ -169,6 +195,8 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
     required TextStyle contentStyle,
     required String date,
     required TextStyle dateStyle,
+    required String time,
+    required TextStyle timeStyle,
     required String author,
     required TextStyle authorStyle,
     required VoidCallback onDelete,
@@ -222,6 +250,11 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
               Text(
                 date,
                 style: dateStyle,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                time,
+                style: timeStyle,
               ),
             ],
           ),

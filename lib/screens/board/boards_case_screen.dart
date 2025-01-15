@@ -4,6 +4,7 @@ import 'post_creation_screen.dart'; // PostCreationScreen import
 import '../../widgets/search_textField.dart';
 import '../../widgets/custom_post.dart'; // PostCard import
 import 'article_screen.dart'; // ArticleScreen import
+import 'package:intl/intl.dart'; // For date parsing and formatting
 
 class BoardsCaseScreen extends StatefulWidget {
   final String title;
@@ -15,6 +16,7 @@ class BoardsCaseScreen extends StatefulWidget {
 }
 
 class _BoardsCaseScreenState extends State<BoardsCaseScreen> {
+  // 게시물 데이터
   final List<Map<String, String>> _posts = [
     {
       'title': '긴급상황: 이것은 제목입니다 0',
@@ -48,6 +50,7 @@ class _BoardsCaseScreenState extends State<BoardsCaseScreen> {
     },
   ];
 
+  // 검색어를 저장할 변수
   String _searchQuery = '';
   late TextEditingController _searchController;
 
@@ -65,6 +68,7 @@ class _BoardsCaseScreenState extends State<BoardsCaseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 검색 필터를 적용한 게시물 리스트
     final filteredPosts = _posts.where((post) {
       final title = post['title']!.toLowerCase();
       final author = post['author']!.toLowerCase();
@@ -74,7 +78,7 @@ class _BoardsCaseScreenState extends State<BoardsCaseScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomBackAppBar(title: widget.title),
+      appBar: CustomBackAppBar(title: widget.title), // 커스텀 AppBar 사용
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -94,30 +98,47 @@ class _BoardsCaseScreenState extends State<BoardsCaseScreen> {
               const SizedBox(height: 20),
 
               // 게시물 리스트
-              ...filteredPosts.map(
-                    (post) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ArticleScreen(
-                            title: post['title']!,
-                            content: post['content']!,
+              if (filteredPosts.isEmpty)
+                const Center(
+                  child: Text(
+                    '등록된 게시물이 없습니다.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'NanumGothic',
+                      color: Colors.grey,
+                    ),
+                  ),
+                )
+              else
+                ...filteredPosts.map(
+                      (post) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: InkWell(
+                      onTap: () {
+                        final String dateStr = post['date']!;
+                        final DateTime parsedDate = DateFormat('yyyy.MM.dd').parse(dateStr); // 날짜 파싱
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ArticleScreen(
+                              title: post['title']!,
+                              content: post['content']!,
+                              dateTime: parsedDate, // 파싱된 날짜 전달
+                              authorName: post['author']!,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    child: PostCard(
-                      title: post['title']!,
-                      content: post['content']!,
-                      author: post['author']!,
-                      date: post['date']!,
+                        );
+                      },
+                      child: PostCard(
+                        title: post['title']!,
+                        content: post['content']!,
+                        author: post['author']!,
+                        date: post['date']!,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

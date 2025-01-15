@@ -19,7 +19,7 @@ class CustomExperienceBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 진행률 계산
-    double totalWidth = 480.0; // 경험치바 전체 너비
+    double totalWidth = 350.0; // 경험치바 전체 너비
     double sectionWidth = totalWidth / 4.0; // 5000마다의 구간 너비
 
     // 각 구간별 진행률

@@ -17,7 +17,7 @@ class CustomTitle extends StatelessWidget {
           title,
           style: const TextStyle(
             fontSize: 18,
-            fontFamily: 'Jua',
+            fontFamily: 'Dohyeon',
           ),
         ),
         const SizedBox(height: 8),
