@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/auth.dart';
+import '../../models/admin/auth.dart';
 import 'admin_profile_screen.dart';
 import '../../widgets/search_textField.dart';
 

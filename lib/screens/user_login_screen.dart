@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/user_navigation_bar.dart'; // HomeScreen import
 import '../../widgets/custom_textField.dart';
 import '../../widgets/custom_button.dart';
-import 'package:do_frontend/services/auth_service.dart';
+import 'package:do_frontend/services/common/auth_service.dart';
 import 'package:do_frontend/utils/token_storage.dart';
 import 'login_choice_screen.dart'; // LoginChoiceScreen import
 

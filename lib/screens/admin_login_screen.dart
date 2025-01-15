@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_navigation_bar.dart';
 import '../../widgets/custom_textField.dart';
 import '../../widgets/custom_button.dart';
-import 'login_choice_screen.dart'; // LoginChoiceScreen import
+import 'login_choice_screen.dart';
+import 'package:do_frontend/services/common/auth_service.dart';
+import 'package:do_frontend/utils/token_storage.dart';
 
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({Key? key}) : super(key: key);
@@ -36,7 +38,22 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     });
 
     try {
-      // 로그인 로직 수행 (로그인 성공 시 네비게이션 이동)
+      final response = await AuthService.login(
+        username,
+        password,
+      );
+
+      if (response == null) {
+        setState(() {
+          _errorMessage = '로그인에 실패했습니다.';
+        });
+        return;
+      }
+
+      final tokenStorage = TokenStorage();
+
+      await tokenStorage.saveTokens(response.accessToken, response.refreshToken);
+      // 로그인 성공 후 화면 전환
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -44,9 +61,15 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         ),
       );
     } catch (error) {
+      String errorMsg = error.toString();
+      // "Exception: " 부분 제거
+      if (errorMsg.startsWith('Exception: ')) {
+        errorMsg = errorMsg.replaceFirst('Exception: ', '');
+      }
       setState(() {
-        _errorMessage = '로그인에 실패했습니다.';
+        _errorMessage = errorMsg;
       });
+      print('Login error: $error'); // 디버깅용 로그
     } finally {
       setState(() {
         _isLoading = false;
@@ -132,7 +155,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           ),
           Positioned(
             top: 40,
-            left: 10, // 왼쪽 위에 위치
+            left: 10, // 왼쪽으로 위치 변경
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {

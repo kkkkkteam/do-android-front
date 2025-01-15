@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/auth.dart';
+import '../../models/admin/auth.dart';
 import 'admin_edit_profile_screen.dart';
 
 class AuthProfileScreen extends StatefulWidget {
