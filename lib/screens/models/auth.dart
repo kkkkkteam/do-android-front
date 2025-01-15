@@ -4,7 +4,8 @@ class Auth {
   final String department;
   final String joinDate;
   final String jobGroup;
-  final Map<String, int> yearlyExperience;
+  final String profileImage; // 프로필 이미지 필드
+  final Map<String, int> yearlyExperience; // 연도별 경험치
 
   Auth({
     required this.name,
@@ -12,8 +13,7 @@ class Auth {
     required this.department,
     required this.joinDate,
     required this.jobGroup,
+    required this.profileImage,
     required this.yearlyExperience,
   });
-
-  int get totalExperience => yearlyExperience.values.fold(0, (sum, value) => sum + value);
 }

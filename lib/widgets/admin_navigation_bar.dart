@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../screens/admin/admin_main_screen.dart'; // 관리자 홈 화면
 import '../screens/admin/admin_board_screen.dart'; // 게시판 화면
 import '../screens/admin/admin_group_screen.dart'; // 캘린더 화면
-import '../screens/admin/admin_experience_screen.dart'; // 경험치 화면
 
 class AdminNavigationBar extends StatefulWidget {
   const AdminNavigationBar({Key? key}) : super(key: key);
@@ -19,7 +18,6 @@ class _AdminNavigationBarState extends State<AdminNavigationBar> {
     AdminMainScreen(),    // 관리자 홈 화면
     AdminBoardScreen(),   // 게시판 화면
     AdminGroupScreen(),   // 캘린더 화면
-    AdminExperienceScreen(), // 경험치 화면
   ];
 
   // 네비게이션 아이템 선택 시 처리
@@ -35,10 +33,10 @@ class _AdminNavigationBarState extends State<AdminNavigationBar> {
       body: _pages[_selectedIndex], // 현재 선택된 화면 표시
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: '사내계정관리'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_box), label: '사내계정관리'),
           BottomNavigationBarItem(icon: Icon(Icons.article), label: '공지사항'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: '소속 및 그룹'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: '경험치'),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: '소속 및 그룹'),
+
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF2E9528),

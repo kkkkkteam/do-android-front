@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/auth.dart';
-import '../profile/auth_profile_screen.dart';
+import 'admin_profile_screen.dart';
 
 class AdminMainScreen extends StatefulWidget {
   const AdminMainScreen({Key? key}) : super(key: key);
@@ -16,20 +16,22 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       "id": "001",
       "team": "음성 1센터",
       "joinDate": "2023-01-10",
-      "job": "치킨마요덮밥",
+      "job": "F현장직군",
       "isStarred": true,
-      "starOrder": 1672531200000, // 즐겨찾기 순서를 위한 timestamp
+      "starOrder": 1672531200000,
       "createdOrder": 1,
+      "profileImage": "assets/images/man-01.png",
     },
     {
       "name": "이동건",
       "id": "002",
       "team": "음성 2센터",
       "joinDate": "2022-05-01",
-      "job": "바보",
+      "job": "B관리직군",
       "isStarred": true,
       "starOrder": 1672617600000,
       "createdOrder": 2,
+      "profileImage": "assets/images/man-02.png",
     },
     {
       "name": "박찬",
@@ -40,6 +42,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       "isStarred": false,
       "starOrder": null,
       "createdOrder": 3,
+      "profileImage": "assets/images/man-03.png",
     },
     {
       "name": "장서인",
@@ -50,6 +53,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       "isStarred": false,
       "starOrder": null,
       "createdOrder": 4,
+      "profileImage": "assets/images/woman-05.png",
     },
   ];
 
@@ -62,6 +66,11 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
     super.initState();
     filteredUsers = List.from(users); // 초기 필터링 리스트는 전체 리스트
     applySort(); // 초기 정렬 적용
+  }
+
+  /// 프로필 이미지 경로 가져오기
+  String _getProfileImage(Map<String, dynamic> user) {
+    return user["profileImage"] ?? "assets/images/default_profile.png"; // 기본 이미지
   }
 
   void toggleStar(int index) {
@@ -113,7 +122,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
     }
   }
 
-  void showAddUserDialog() {
+    void showAddUserDialog() {
     String name = "";
     String id = "";
     String team = "";
@@ -155,53 +164,63 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
+
                   TextField(
                     onChanged: (value) => name = value,
                     decoration: _inputDecoration("이름"),
                   ),
                   const SizedBox(height: 15),
+
                   TextField(
                     onChanged: (value) => id = value,
                     decoration: _inputDecoration("사번"),
                   ),
                   const SizedBox(height: 15),
+
                   TextField(
                     onChanged: (value) => team = value,
                     decoration: _inputDecoration("소속"),
                   ),
                   const SizedBox(height: 15),
+
                   TextField(
                     onChanged: (value) => joinDate = value,
                     decoration: _inputDecoration("입사일"),
                   ),
                   const SizedBox(height: 15),
+
                   TextField(
                     onChanged: (value) => job = value,
-                    decoration: _inputDecoration("직급"),
+                    decoration: _inputDecoration("직군 (형식: F현장직군, B관리직군 등)"),
                   ),
                   const SizedBox(height: 20),
+
                   ElevatedButton(
                     onPressed: () {
-                      if (name.isNotEmpty &&
-                          id.isNotEmpty &&
-                          team.isNotEmpty &&
-                          joinDate.isNotEmpty &&
-                          job.isNotEmpty) {
-                        setState(() {
-                          users.add({
-                            "name": name,
-                            "id": id,
-                            "team": team,
-                            "joinDate": joinDate,
-                            "job": job,
-                            "isStarred": false,
-                            "createdOrder": users.length + 1,
-                          });
-                          filteredUsers = List.from(users);
-                        });
-                        applySort();
-                        Navigator.pop(context);
+                      // 직군 형식 검증
+                      final validPrefixes = ['F', 'B', 'G', 'T']; // 허용되는 알파벳 접두사
+                      bool isValidJob = validPrefixes.any((prefix) => job.startsWith(prefix));
+
+                      if (name.isEmpty || id.isEmpty || team.isEmpty || joinDate.isEmpty || job.isEmpty) {
+                        _showErrorDialog("모든 필드를 입력해야 합니다.");
+                        return;
                       }
+
+                      setState(() {
+                        users.add({
+                          "name": name,
+                          "id": id,
+                          "team": team,
+                          "joinDate": joinDate,
+                          "job": job,
+                          "isStarred": false,
+                          "createdOrder": users.length + 1,
+                          "profileImage": "assets/images/man-01.png", // 고정된 프로필 이미지
+                        });
+                        filteredUsers = List.from(users);
+                      });
+                      applySort();
+                      Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2E9629),
@@ -220,6 +239,30 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       },
     );
   }
+
+  /// 경고 메시지 다이얼로그
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text("오류", style: TextStyle(color: Colors.red)),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("확인"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
 
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
@@ -252,6 +295,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                 color: Colors.green,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'RubikScribble',
+                fontSize: 30,
               ),
             ),
           ),
@@ -302,82 +346,80 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                       child: Text(
                         "검색 결과가 없습니다.",
                         style: TextStyle(color: Colors.grey, fontSize: 16),
+                        
                       ),
                     )
+
                   : ListView.builder(
                       padding: const EdgeInsets.only(top: 20),
                       itemCount: filteredUsers.length,
                       itemBuilder: (context, index) {
                         final user = filteredUsers[index];
                         return GestureDetector(
-                          onTap: () {
-                            Auth auth = Auth(
-                              name: user["name"],
-                              id: user["id"] ?? "",
-                              department: user["team"] ?? "",
-                              joinDate: user["joinDate"] ?? "",
-                              jobGroup: user["job"] ?? "",
-                              yearlyExperience: const {}, // Default for this example
-                            );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AuthProfileScreen(auth: auth),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(11),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: Colors.grey[200],
-                                      child: Text(user["name"][0]),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          user["name"],
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        Text(
-                                          "소속: ${user["team"]} | 직급: ${user["job"]}",
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    user["isStarred"]
-                                        ? Icons.star
-                                        : Icons.star_border,
-                                    color: user["isStarred"]
-                                        ? Colors.yellow
-                                        : Colors.grey,
-                                  ),
-                                  onPressed: () => toggleStar(index),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
+  onTap: () {
+    Auth auth = Auth(
+      name: user["name"],
+      id: user["id"] ?? "",
+      department: user["team"] ?? "",
+      joinDate: user["joinDate"] ?? "",
+      jobGroup: user["job"] ?? "",
+      profileImage: user["profileImage"] ?? "assets/images/default_profile.png",
+      yearlyExperience: const {}, // Default for this example
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AuthProfileScreen(auth: auth),
+      ),
+    );
+  },
+  child: Container(
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    padding: const EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(11),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            CircleAvatar(
+              radius: 25,
+              backgroundImage: AssetImage(_getProfileImage(user)),
+              backgroundColor: Colors.grey[200],
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user["name"],
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  "소속: ${user["team"]} | 직군: ${user["job"]}",
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
+        IconButton(
+          icon: Icon(
+            user["isStarred"] ? Icons.star : Icons.star_border,
+            color: user["isStarred"] ? Colors.yellow : Colors.grey,
+          ),
+          onPressed: () => toggleStar(index),
+        ),
+      ],
+    ),
+  ),
+);
                       },
                     ),
             ),
@@ -387,6 +429,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: showAddUserDialog,
         backgroundColor: const Color(0xFF2E9629),
+        shape: CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );

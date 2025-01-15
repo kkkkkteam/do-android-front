@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'post_creation_page.dart';
+import 'admin_post_creation.dart';
 
 class AdminBoardScreen extends StatefulWidget {
   const AdminBoardScreen({Key? key}) : super(key: key);
@@ -9,18 +9,44 @@ class AdminBoardScreen extends StatefulWidget {
 }
 
 class _AdminBoardScreenState extends State<AdminBoardScreen> {
-  // 게시물 리스트
   final List<Map<String, dynamic>> posts = [];
+  List<Map<String, dynamic>> filteredPosts = [];
+  String searchQuery = "";
 
-  // 게시물 추가 함수
+  @override
+  void initState() {
+    super.initState();
+    filteredPosts = List.from(posts);
+  }
+
   void addPost(String title, String content, bool isUrgent) {
     setState(() {
       posts.insert(0, {
         'title': title,
         'content': content,
-        'date': DateTime.now().toString().split(' ')[0], // 날짜
-        'author': isUrgent ? '긴급' : '일반', // 작성자
+        'date': DateTime.now().toString().split(' ')[0],
+        'author': isUrgent ? '긴급' : '일반',
       });
+      filterPosts(searchQuery);
+    });
+  }
+
+  void deletePost(int index) {
+    setState(() {
+      final postToDelete = filteredPosts[index];
+      posts.remove(postToDelete);
+      filteredPosts.removeAt(index);
+    });
+  }
+
+  void filterPosts(String query) {
+    setState(() {
+      searchQuery = query.toLowerCase();
+      filteredPosts = posts.where((post) {
+        return post['title'].toLowerCase().contains(searchQuery) ||
+            post['content'].toLowerCase().contains(searchQuery) ||
+            post['author'].toLowerCase().contains(searchQuery);
+      }).toList();
     });
   }
 
@@ -31,27 +57,15 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: const Text(
-          '공지사항',
+          'do.',
           style: TextStyle(
-            fontSize: 18,
-            fontFamily: 'NanumGothic',
+            fontSize: 30,
+            fontFamily: 'RubikScribble',
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.green,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications, color: Colors.black),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -59,8 +73,8 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 검색 창
               TextField(
+                onChanged: filterPosts,
                 decoration: InputDecoration(
                   hintText: '게시물의 제목 또는 작성자를 입력하세요',
                   hintStyle: const TextStyle(
@@ -81,8 +95,7 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              // 게시물 리스트
-              if (posts.isEmpty)
+              if (filteredPosts.isEmpty)
                 const Center(
                   child: Text(
                     '등록된 게시물이 없습니다.',
@@ -94,42 +107,46 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
                   ),
                 )
               else
-                ...posts.map((post) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: _buildPostCard(
-                          title: post['title'],
-                          titleStyle: const TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'Dohyeon',
-                            fontWeight: FontWeight.w400,
-                          ),
-                          content: post['content'],
-                          contentStyle: const TextStyle(
-                            fontSize: 10,
-                            fontFamily: 'NanumGothic',
-                          ),
-                          date: post['date'],
-                          dateStyle: const TextStyle(
-                            fontSize: 7,
-                            fontFamily: 'NanumGothic',
-                          ),
-                          author: post['author'],
-                          authorStyle: const TextStyle(
-                            fontSize: 7,
-                            fontFamily: 'NanumGothic',
-                          ),
+                ...filteredPosts.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final post = entry.value;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: _buildPostCard(
+                        title: post['title'],
+                        titleStyle: const TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Dohyeon',
+                          fontWeight: FontWeight.w400,
                         ),
+                        content: post['content'],
+                        contentStyle: const TextStyle(
+                          fontSize: 10,
+                          fontFamily: 'NanumGothic',
+                        ),
+                        date: post['date'],
+                        dateStyle: const TextStyle(
+                          fontSize: 7,
+                          fontFamily: 'NanumGothic',
+                        ),
+                        author: post['author'],
+                        authorStyle: const TextStyle(
+                          fontSize: 7,
+                          fontFamily: 'NanumGothic',
+                        ),
+                        onDelete: () => deletePost(index),
                       ),
-                    )),
+                    ),
+                  );
+                }),
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // + 버튼 눌렀을 때 PostCreationPage로 이동 및 결과 받기
           final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const PostCreationPage()),
@@ -154,6 +171,7 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
     required TextStyle dateStyle,
     required String author,
     required TextStyle authorStyle,
+    required VoidCallback onDelete,
   }) {
     return Container(
       padding: const EdgeInsets.all(12.0),
@@ -164,9 +182,28 @@ class _AdminBoardScreenState extends State<AdminBoardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: titleStyle,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: titleStyle,
+              ),
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'delete') {
+                    onDelete();
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: Text('삭제'),
+                  ),
+                ],
+                icon: const Icon(Icons.more_vert, color: Colors.black),
+              ),
+            ],
           ),
           const SizedBox(height: 8),
           Text(

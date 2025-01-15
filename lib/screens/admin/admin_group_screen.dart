@@ -242,7 +242,7 @@ void addGroup(Map<String, dynamic> affiliation) {
         elevation: 0,
         title: const Text(
           'do.',
-          style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontFamily: 'RubikScribble'),
+          style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontFamily: 'RubikScribble', fontSize: 30),
         ),
         centerTitle: true,
       ),
