@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/admin/auth.dart';
 import 'admin_profile_screen.dart';
 import '../../widgets/search_textField.dart';
+import '../../services/admin/'
 
 class AdminMainScreen extends StatefulWidget {
   const AdminMainScreen({Key? key}) : super(key: key);
@@ -351,6 +352,44 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       ),
     );
   }
+  /// Navigate to the AuthProfileScreen and update user data
+  void _navigateToProfile(Map<String, dynamic> user) async {
+    final auth = Auth(
+      name: user["name"],
+      id: user["id"],
+      department: user["team"],
+      joinDate: user["joinDate"],
+      jobGroup: user["job"],
+      profileImage: user["profileImage"],
+      yearlyExperience: user["yearlyExperience"] ?? {},
+    );
+
+    final updatedAuth = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AuthProfileScreen(auth: auth)),
+    );
+
+    if (updatedAuth != null && updatedAuth is Auth) {
+      setState(() {
+        final index = users.indexWhere((u) => u["id"] == updatedAuth.id);
+        if (index != -1) {
+          users[index] = {
+            "name": updatedAuth.name,
+            "id": updatedAuth.id,
+            "team": updatedAuth.department,
+            "joinDate": updatedAuth.joinDate,
+            "job": updatedAuth.jobGroup,
+            "profileImage": updatedAuth.profileImage,
+            "yearlyExperience": updatedAuth.yearlyExperience,
+            "isStarred": users[index]["isStarred"], // 유지
+            "starOrder": users[index]["starOrder"], // 유지
+            "createdOrder": users[index]["createdOrder"], // 유지
+          };
+          filteredUsers = List.from(users);
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -416,14 +455,14 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                                 value: "등록순",
                                 child: Text(
                                   "등록순",
-                                  style: TextStyle(fontFamily: 'NanumGothic', fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontFamily: 'NanumGothic'),
                                 ),
                               ),
                               DropdownMenuItem(
                                 value: "즐겨찾기순",
                                 child: Text(
                                   "즐겨찾기순",
-                                  style: TextStyle(fontFamily: 'NanumGothic', fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontFamily: 'NanumGothic'),
                                 ),
                               ),
                             ],
@@ -507,8 +546,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                                   Text(
                                     user["name"],
                                     style: const TextStyle(
-                                      fontSize: 14,
-                                      fontFamily: 'Dohyeon'
+                                        fontSize: 14,
+                                        fontFamily: 'Dohyeon'
                                     ),
                                   ),
                                   const SizedBox(height: 4), // 이름과 소속 간 간격

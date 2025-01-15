@@ -14,32 +14,11 @@ class AuthProfileScreen extends StatefulWidget {
 class _AuthProfileScreenState extends State<AuthProfileScreen> {
   late Auth auth;
 
-  // 직무 그룹별 경험치 테이블
   final Map<String, List<int>> experienceTable = {
-    "F": [
-      0,
-      13500,
-      27000,
-      39000,
-      51000,
-      63000,
-      78000,
-      93000,
-      108000,
-      126000,
-      144000,
-      162000
-    ],
+    "F": [0, 13500, 27000, 39000, 51000, 63000, 78000, 93000, 108000],
     "B": [0, 24000, 52000, 78000, 117000, 169000],
     "G": [0, 24000, 52000, 78000, 117000, 169000],
     "T": [0, 24000, 52000, 78000, 117000, 169000],
-  };
-
-  // 연도별 경험치 데이터 (예시 데이터)
-  final Map<int, int> yearlyExperience = {
-    2021: 15000,
-    2022: 20000,
-    2023: 15000,
   };
 
   @override
@@ -48,118 +27,99 @@ class _AuthProfileScreenState extends State<AuthProfileScreen> {
     auth = widget.auth;
   }
 
-  void _updateAuth(Auth updatedAuth) {
-    setState(() {
-      auth = updatedAuth;
-    });
-  }
-
-  // 경험치 기반 레벨 계산
+  /// 경험치와 직군을 기반으로 레벨 계산
   Map<String, dynamic> _calculateLevel(String jobGroup, int totalExperience) {
     final levels = experienceTable[jobGroup] ?? [];
     for (int i = levels.length - 1; i >= 0; i--) {
       if (totalExperience >= levels[i]) {
-        int levelNumber = i + 1;
-        String? suffix;
-        if (jobGroup == "F") {
-          suffix = _romanNumeral((i % 3) + 1); // 접미사는 Ⅰ, Ⅱ, Ⅲ
-          levelNumber = (i ~/ 3) + 1; // 숫자 레벨 계산 (1, 2, 3...)
-        }
         return {
-          "level": "$jobGroup$levelNumber${suffix != null ? '-$suffix' : ''}",
-          "nextLevelExperience": (i + 1 < levels.length ? levels[i + 1] : null)
+          "level": "$jobGroup${i + 1}",
+          "nextLevelExperience": (i + 1 < levels.length) ? levels[i + 1] : null,
         };
       }
     }
-    return {
-      "level": "$jobGroup${levels.length}",
-      "nextLevelExperience": levels.isNotEmpty ? levels[0] : null,
-    };
+    return {"level": "$jobGroup${levels.length}", "nextLevelExperience": null};
+  }
+
+  /// 레벨의 접미사를 로마 숫자로 변환
+  String _romanNumeral(int value) {
+    switch (value) {
+      case 1:
+        return "Ⅰ";
+      case 2:
+        return "Ⅱ";
+      case 3:
+        return "Ⅲ";
+      default:
+        return "";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final totalExperience = yearlyExperience.values.reduce((a, b) => a + b);
-    final jobGroup = auth.jobGroup.substring(0, 1); // 직무 그룹의 첫 글자 (F, B, G, T)
+    final totalExperience = auth.yearlyExperience.values.fold(0, (a, b) => a + b);
+    final jobGroup = auth.jobGroup.substring(0, 1); // 직군의 첫 글자 추출
     final levelInfo = _calculateLevel(jobGroup, totalExperience);
 
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.pop(context);
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context, auth), // 수정된 데이터를 반환
+        ),
+        title: const Text(
+          'do.',
+          style: TextStyle(
+            fontFamily: 'RubikScribble',
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF2E9629),
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          GestureDetector(
+            onTap: () async {
+              final updatedAuth = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AuthEditProfileScreen(auth: auth),
+                ),
+              );
+              if (updatedAuth != null && updatedAuth is Auth) {
+                setState(() {
+                  auth = updatedAuth;
+                });
+              }
             },
-          ),
-          title: const Text(
-            'do.',
-            style: TextStyle(
-              fontFamily: 'RubikScribble',
-              fontSize: 30,
-              color: Color(0xFF2E9629),
-            ),
-          ),
-          centerTitle: true,
-          actions: [
-            GestureDetector(
-              onTap: () async {
-                final updatedAuth = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AuthEditProfileScreen(auth: auth),
-                  ),
-                );
-                if (updatedAuth != null) {
-                  _updateAuth(updatedAuth);
-                }
-              },
-              child: const Padding(
-                padding: EdgeInsets.only(right: 16.0),
-                child: Center(
-                  child: Text(
-                    '사원 정보 수정',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'NanumGothic',
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                    ),
+            child: const Padding(
+              padding: EdgeInsets.only(right: 16.0),
+              child: Center(
+                child: Text(
+                  '사원 정보 수정',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'NanumGothic',
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
                   ),
                 ),
               ),
             ),
-          ],
-          bottom: const TabBar(
-            indicatorColor: Colors.green,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey,
-            tabs: [
-              Tab(text: '정보'),
-              Tab(text: '달력'),
-            ],
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TabBarView(
-            children: [
-              _buildProfileInfo(levelInfo, totalExperience),
-              const Center(child: Text('달력 탭')),
-            ],
-          ),
-        ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: _buildProfileInfo(levelInfo, totalExperience),
       ),
     );
   }
 
   Widget _buildProfileInfo(Map<String, dynamic> levelInfo, int totalExperience) {
-    final jobGroup = auth.jobGroup.substring(0, 1); // 직군의 첫 글자 추출 (F, B, G, T)
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -224,10 +184,9 @@ class _AuthProfileScreenState extends State<AuthProfileScreen> {
             ),
           ),
           const Divider(color: Colors.green, thickness: 2),
-          ...yearlyExperience.entries
-              .map((entry) =>
-              _buildInfoRow("${entry.key}년", "${entry.value} do"))
-              .toList(),
+          ...auth.yearlyExperience.entries.map(
+                (entry) => _buildInfoRow("${entry.key}년", "${entry.value} do"),
+          ),
           const SizedBox(height: 20),
           const Text(
             "레벨 및 총 경험치",
@@ -248,19 +207,6 @@ class _AuthProfileScreenState extends State<AuthProfileScreen> {
         ],
       ),
     );
-  }
-
-  String _romanNumeral(int value) {
-    switch (value) {
-      case 1:
-        return "Ⅰ";
-      case 2:
-        return "Ⅱ";
-      case 3:
-        return "Ⅲ";
-      default:
-        return "";
-    }
   }
 
   Widget _buildInfoRow(String title, String value) {

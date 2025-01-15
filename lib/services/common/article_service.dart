@@ -13,7 +13,7 @@ class ArticleService{
       'Authorization': 'Bearer ${access_token}'
     };
 
-    final response = await http.post(
+    final response = await http.get(
       url,
       headers: headers,
     );

@@ -2,45 +2,43 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../utils/constants.dart';
 import '../../utils/token_storage.dart';
-import '../../models/admin/user.dart';
-import '../../models/admin/user_profile.dart';
+import '../../models/admin/article.dart';
 
-class UserService{
-  static Future<User?> SearchUserByUserId(int user_id) async {
+class ArticleManagement{
+  static Future<bool> addArticle(String title, String content, int article_type_id) async {
     final tokenStorage = TokenStorage();
     String access_token = tokenStorage.getAccessToken() as String;
-    final url = Uri.parse('$apiBaseUrl/api/v1/admin/user/${user_id}');
+    final url = Uri.parse('$apiBaseUrl/api/v1/admin/article');
     final headers = {
       'Authorization': 'Bearer ${access_token}'
     };
-    final response = await http.get(
+    final body = {'title':title, 'content':content, 'article_type_id':article_type_id};
+    final response = await http.post(
       url,
       headers: headers,
+      body: body
     );
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return User.fromJson(data);
+    if (response.statusCode == 201) {
+      return true;
     } else {
-      final errorData = json.decode(response.body);
-      throw Exception(errorData['detail'] ?? '정보 가져오기 실패');
+      return false;
     }
   }
-  static Future<UsersResponse?> UsersPage(int page, int perPage) async {
+  static Future<ArticlesResponse?> GetArticle(int page, int perPage) async {
     final tokenStorage = TokenStorage();
     String access_token = tokenStorage.getAccessToken() as String;
+    final url = Uri.parse('$apiBaseUrl/api/v1/admin/article?page=$page&per_page=$perPage');
     final headers = {
       'Authorization': 'Bearer ${access_token}'
     };
-    final url = Uri.parse(
-        'https://your-api-domain.com/api/v1/admin/users?page=$page&per_page=$perPage');
     try {
       final response = await http.get(
-        url,
-        headers: headers,
+          url,
+          headers: headers,
       );
 
       if (response.statusCode == 200) {
-        return UsersResponse.fromJson(jsonDecode(response.body));
+        return ArticlesResponse.fromJson(jsonDecode(response.body));
 
       } else {
         print('Failed to fetch users. Status code: ${response.statusCode}');
