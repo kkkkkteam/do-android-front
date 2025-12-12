@@ -1,5 +1,4 @@
-[실전앱개발경진대회 수료증_ㅋㅋㅋㅋㅋ (1) 오후 4.18.23.pdf](https://github.com/user-attachments/files/24121952/_.1.4.18.23.pdf)
-
+<img width="596" height="842" alt="image" src="https://github.com/user-attachments/assets/06c3a3c2-9c5a-42fd-965c-61d130c58568" />
 
 ## 📱 do_frontend: 사내 업무 효율 증진 및 구성원 관리 애플리케이션
 
